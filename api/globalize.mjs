@@ -6,7 +6,7 @@ export default async ({query}, res) => {
     try {
         const {source, vars} = query
         const script = await fetch(source).then(response => response.text())
-        const globalizers = vars.split(",").map(v => `globalThis["${v}"] = ${v};`)
+        const globalizers = vars ? vars.split(",").map(v => `globalThis["${v}"] = ${v};`) : []
         return res.send([script, ...globalizers].join(`\r\n`))
     } catch (error) {
         return res.send(`throw Error(${JSON.stringify(serializeError(error))})`)
